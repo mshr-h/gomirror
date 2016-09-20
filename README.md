@@ -72,5 +72,5 @@ Note that `dst/dir2/`, `dst/dir2/file3`, `dst/file4` was deleted due to mentione
 
 ## License
 
-MIT
+MIT: [LICENSE](LICENSE)
 
