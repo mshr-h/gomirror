@@ -44,10 +44,10 @@ $ tree
 4 directories, 4 files
 
 $ gomirror src dst
-Deleting dst/dir2
-Deleting dst/file4
-Copying src/dir1/file1 -> dst/dir1/file1
-Copying src/file2 -> dst/file2
+2016/09/21 22:15:20 Deleting dst/dir2
+2016/09/21 22:15:20 Deleting dst/file4
+2016/09/21 22:15:20 Copying  src/dir1/file1 -> dst/dir1/file1
+2016/09/21 22:15:20 Copying  src/file2 -> dst/file2
 
 $ tree
 .

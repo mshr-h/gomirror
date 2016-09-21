@@ -80,9 +80,8 @@ func mirrorDir(src, dst string) error {
 		dstPath := filepath.Join(dst, dstentry.Name())
 
 		// if srcPath doesn't exist, delete it.
-
 		if _, err := os.Stat(srcPath); os.IsNotExist(err) {
-			fmt.Printf("Deleting %s\n", dstPath)
+			log.Printf("Deleting %s\n", dstPath)
 			if err := os.RemoveAll(dstPath); err != nil {
 				return nil
 			}
@@ -110,7 +109,7 @@ func mirrorDir(src, dst string) error {
 			}
 
 			if di, err := os.Stat(dstPath); os.IsNotExist(err) {
-				fmt.Printf("Copying %s -> %s\n", srcPath, dstPath)
+				log.Printf("Copying  %s -> %s\n", srcPath, dstPath)
 				if err := copyFile(srcPath, dstPath); err != nil {
 					return err
 				}
@@ -119,7 +118,7 @@ func mirrorDir(src, dst string) error {
 					return nil
 				}
 
-				fmt.Printf("Updating %s -> %s\n", srcPath, dstPath)
+				log.Printf("Updating %s -> %s\n", srcPath, dstPath)
 				if err := copyFile(srcPath, dstPath); err != nil {
 					return err
 				}
