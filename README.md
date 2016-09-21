@@ -4,7 +4,7 @@
 
 This is a local directory mirroring tool written in Golang.
 
-- Ubuntu/Windows support (probably works on macOS but not tested.)
+- Ubuntu/Windows support (probably works on macOS but not tested)
 - Support differential copy
 - No config file
 - No external library dependency
@@ -25,7 +25,7 @@ Make sure to use Go 1.7 or above.
 gomirror path/to/source_directory path/to/destination_directory
 ```
 
-WARNING: Files/directories in the destination directory will be deleted if they doesn't exists in the source directory.
+WARNING: Files/directories in the destination directory will be deleted if they don't exist in the source directory.
 
 ## Example
 
@@ -63,7 +63,7 @@ $ tree
 4 directories, 4 files
 ```
 
-Note that `dst/dir2/`, `dst/dir2/file3`, `dst/file4` was deleted due to mentioned on Usage section.
+Note that `dst/dir2/`, `dst/dir2/file3` and `dst/file4` were deleted due to mentioned on Usage section.
 
 ## Contribution
 
