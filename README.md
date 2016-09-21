@@ -1,4 +1,5 @@
 # gomirror
+[![Build Status](https://travis-ci.org/mshr-h/gomirror.svg?branch=master)](https://travis-ci.org/mshr-h/gomirror)
 
 This is a local directory mirroring tool written in Golang.
 
