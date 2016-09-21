@@ -3,6 +3,7 @@
 This is a local directory mirroring tool written in Golang.
 
 - Ubuntu/Windows support (probably works on macOS but not tested.)
+- Support differential copy
 - No config file
 - No external library dependency
 

@@ -8,18 +8,19 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"time"
 )
 
-func copyFile(src, dst string) (err error) {
+func copyFile(src, dst string) error {
 	in, err := os.Open(src)
 	if err != nil {
-		return
+		return err
 	}
 	defer in.Close()
 
 	out, err := os.Create(dst)
 	if err != nil {
-		return
+		return err
 	}
 	defer func() {
 		if e := out.Close(); e != nil {
@@ -27,26 +28,28 @@ func copyFile(src, dst string) (err error) {
 		}
 	}()
 
-	_, err = io.Copy(out, in)
-	if err != nil {
-		return
+	if _, err := io.Copy(out, in); err != nil {
+		return err
 	}
 
-	err = out.Sync()
-	if err != nil {
-		return
+	if err := out.Sync(); err != nil {
+		return err
 	}
 
 	si, err := os.Stat(src)
 	if err != nil {
-		return
-	}
-	err = os.Chmod(dst, si.Mode())
-	if err != nil {
-		return
+		return err
 	}
 
-	return
+	if err := os.Chmod(dst, si.Mode()); err != nil {
+		return err
+	}
+
+	if err := os.Chtimes(dst, time.Now(), si.ModTime()); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func mirrorDir(src, dst string) error {
@@ -62,8 +65,7 @@ func mirrorDir(src, dst string) error {
 		return fmt.Errorf("%s is not directory", src)
 	}
 
-	err = os.MkdirAll(dst, sstat.Mode())
-	if err != nil {
+	if err := os.MkdirAll(dst, sstat.Mode()); err != nil {
 		return err
 	}
 
@@ -77,15 +79,11 @@ func mirrorDir(src, dst string) error {
 		srcPath := filepath.Join(src, dstentry.Name())
 		dstPath := filepath.Join(dst, dstentry.Name())
 
-		// if dstPath doesn't exist, delete it.
-		_, err := os.Stat(srcPath)
-		if err != nil && !os.IsNotExist(err) {
-			return err
-		}
-		if err != nil {
+		// if srcPath doesn't exist, delete it.
+
+		if _, err := os.Stat(srcPath); os.IsNotExist(err) {
 			fmt.Printf("Deleting %s\n", dstPath)
-			err := os.RemoveAll(dstPath)
-			if err != nil {
+			if err := os.RemoveAll(dstPath); err != nil {
 				return nil
 			}
 		}
@@ -101,22 +99,39 @@ func mirrorDir(src, dst string) error {
 	for _, srcentry := range srcentries {
 		srcPath := filepath.Join(src, srcentry.Name())
 		dstPath := filepath.Join(dst, srcentry.Name())
-		// fmt.Println(srcPath, dstPath)
 		if srcentry.IsDir() {
-			err := mirrorDir(srcPath, dstPath)
-			if err != nil {
+			if err := mirrorDir(srcPath, dstPath); err != nil {
 				return err
 			}
 		} else {
-			fmt.Printf("Copying %s -> %s\n", srcPath, dstPath)
-			err = copyFile(srcPath, dstPath)
+			si, err := os.Stat(srcPath)
 			if err != nil {
-				return nil
+				return err
+			}
+
+			if di, err := os.Stat(dstPath); os.IsNotExist(err) {
+				fmt.Printf("Copying %s -> %s\n", srcPath, dstPath)
+				if err := copyFile(srcPath, dstPath); err != nil {
+					return err
+				}
+			} else if isModified(si, di) {
+				if err := os.RemoveAll(dstPath); err != nil {
+					return nil
+				}
+
+				fmt.Printf("Updating %s -> %s\n", srcPath, dstPath)
+				if err := copyFile(srcPath, dstPath); err != nil {
+					return err
+				}
 			}
 		}
 	}
 
 	return nil
+}
+
+func isModified(src, dst os.FileInfo) bool {
+	return src.Size() != dst.Size() || !src.ModTime().Equal(dst.ModTime())
 }
 
 func main() {
@@ -132,8 +147,7 @@ func main() {
 		return
 	}
 
-	err := mirrorDir(from, to)
-	if err != nil {
+	if err := mirrorDir(from, to); err != nil {
 		log.Fatal(err)
 	}
 }
