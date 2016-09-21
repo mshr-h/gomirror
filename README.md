@@ -1,5 +1,6 @@
 # gomirror
 [![Build Status](https://travis-ci.org/mshr-h/gomirror.svg?branch=master)](https://travis-ci.org/mshr-h/gomirror)
+[![license](https://img.shields.io/badge/license-MIT-orange.svg)](LICENSE)
 
 This is a local directory mirroring tool written in Golang.
 
@@ -71,8 +72,4 @@ Note that `dst/dir2/`, `dst/dir2/file3`, `dst/file4` was deleted due to mentione
 1. Commit your changes (git commit -am 'Add some feature')
 1. Push to the branch (git push origin my-new-feature)
 1. Create new Pull Request
-
-## License
-
-MIT: [LICENSE](LICENSE)
 
