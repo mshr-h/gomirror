@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -111,6 +112,11 @@ func mirrorDir(src, dst string) error {
 			if di, err := os.Stat(dstPath); os.IsNotExist(err) {
 				log.Printf("Copying  %s -> %s\n", srcPath, dstPath)
 				if err := copyFile(srcPath, dstPath); err != nil {
+					// check if srcPath is whether in-use or not
+					if strings.Contains(err.Error(), "The process cannot access the file because it is being used by another process.") {
+						log.Printf("Ignore   %s because it's being used by another process.\n", srcPath)
+						continue
+					}
 					return err
 				}
 			} else if isModified(si, di) {
