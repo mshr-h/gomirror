@@ -63,7 +63,7 @@ $ tree
 4 directories, 4 files
 ```
 
-Note that `dst/dir2/`, `dst/dir2/file3` and `dst/file4` were deleted due to mentioned on Usage section.
+Note that `dst/dir2/`, `dst/dir2/file3` and `dst/file4` were deleted due to mentioned on [Usage](#usage) section.
 
 ## Contribution
 
